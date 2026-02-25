@@ -1,0 +1,39 @@
+{
+  "name": "assignment-api-design",
+  "version": "1.0.0",
+  "description": "A GraphQL API for Video Game Sales data that is built with Node.js and MongoDB.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node seed/seedDatabase.js",
+    "lint": "eslint src/ seed/"
+  },
+  "keywords": [
+    "graphql",
+    "api",
+    "videogames",
+    "mongodb",
+    "nodejs",
+    "jwt"
+  ],
+  "author": "Fatima Alkashaf <fa223ns@student.lnu.se>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server-express": "^3.13.0",
+    "bcryptjs": "^3.0.3",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "graphql": "^16.13.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.2",
+    "nodemon": "^3.1.14"
+  },
+  "engines": {
+    "node": ">=22.7.0"
+  }
+}
