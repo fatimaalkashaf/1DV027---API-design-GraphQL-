@@ -1,5 +1,5 @@
 {
-  "name": "assignment-api-design",
+  "name": "videogame-api",
   "version": "1.0.0",
   "description": "A GraphQL API for Video Game Sales data that is built with Node.js and MongoDB.",
   "main": "src/server.js",
