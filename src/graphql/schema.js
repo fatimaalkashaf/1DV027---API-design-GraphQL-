@@ -11,7 +11,7 @@ export const typeDefs = gql`
     platform: String!
     year: Int
     genre: String!
-    publisher: publisher
+    publisher: Publisher
     naSales: Float
     euSales: Float
     jpSales: Float
@@ -26,7 +26,7 @@ export const typeDefs = gql`
     totalGlobalSales: Float
   }
 
-  type platform {
+  type Platform {
     id: ID!
     name: String!
     totalGames: Int

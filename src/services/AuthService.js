@@ -41,7 +41,7 @@ export class AuthService {
    * @throws {Error} - If the credentials are invalid.
    */
   async login (username, password) {
-    const username = await this.userRepository.findByUsername(username)
+    const user = await this.userRepository.findByUsername(username)
     if (!user) {
       throw new Error('Invalid credentials')
     }
