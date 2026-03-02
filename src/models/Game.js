@@ -12,6 +12,11 @@ const gameSchema = new mongoose.Schema(
       trim: true
     },
     platform: {
+      type: String,
+      required: [true, 'Platform is required'],
+      trim: true
+    },
+    year: {
       type: Number,
       min: [1970, 'Year must be after 1970'],
       max: [2030, 'Year must be before 2026']
