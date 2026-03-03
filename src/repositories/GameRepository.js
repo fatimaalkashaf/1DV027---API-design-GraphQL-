@@ -41,7 +41,8 @@ export class GameRepository {
    */
   async create (data) {
     const game = new Game(data)
-    return game.save()
+    const savedGame = await game.save()
+    return Game.findById(savedGame._id).populate('publisher')
   }
 
   /**

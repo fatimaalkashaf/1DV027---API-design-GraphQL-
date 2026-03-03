@@ -17,8 +17,8 @@ export class PublisherService {
    * @param {number} offset - The number of results to skip.
    * @returns {Promise<{publishers: Publisher[], totalCount: number}>}
    */
-  async getPublisher (limit = 20, offset = 0) {
-    const [publisher, totalCount] = await Promise.all([
+  async getPublishers (limit = 20, offset = 0) {
+    const [publishers, totalCount] = await Promise.all([
       this.publisherRepository.findAll(limit, offset),
       this.publisherRepository.count()
     ])

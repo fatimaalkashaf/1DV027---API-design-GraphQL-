@@ -28,7 +28,7 @@ export class GameService {
       this.gameRepository.count(filter)
     ])
 
-    return { games, totalCount }
+    return { games: game, totalCount }
   }
 
   /**
