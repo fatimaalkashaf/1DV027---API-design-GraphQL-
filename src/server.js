@@ -6,7 +6,9 @@ import { resolvers } from './graphql/resolvers/index.js'
 import { connectDatabase } from './config/database.js'
 import { verifyToken } from './middleware/auth.js'
 
-dotenv.config()
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config()
+}
 
 /**
  * Initializes and starts the Express and Apollo GraphQL server.

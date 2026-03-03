@@ -6,7 +6,9 @@ import { Publisher } from '../src/models/Publisher.js'
 import { Platform } from '../src/models/Platform.js'
 import { Game } from '../src/models/Game.js'
 
-dotenv.config()
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config()
+}
 
 const CSV_FILE_PATH = './seed/data/vgsales.csv'
 
