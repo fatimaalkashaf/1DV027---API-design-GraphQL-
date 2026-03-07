@@ -11,6 +11,18 @@ export class GameService {
   }
 
   /**
+   * Validates that the provided ID is a valid MongoDB ObjectId.
+   *
+   * @param {string} id - The ID to validate.
+   * @returns {Error} - If the ID format is invalid.
+   */
+  #validateId (id) {
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      throw new Error('Invalid ID format')
+    }
+  }
+
+  /**
    * Retrieves all games with optional filtering and pagination.
    *
    * @param {object} options - The filter and pagination options.
@@ -36,9 +48,10 @@ export class GameService {
    *
    * @param {string} id - The game's MongoDB ObjectId.
    * @returns {Promise<Game>}
-   * @throws {Error} - If the game is not found.
+   * @throws {Error} - If the ID format is invalid or game is not found.
    */
   async getGameById (id) {
+    this.#validateId(id)
     const game = await this.gameRepository.findById(id)
     if (!game) {
       throw new Error('Game not found')
@@ -62,9 +75,10 @@ export class GameService {
    * @param {string} id - The game's MongoDB ObjectId.
    * @param {object} data - The fields to update.
    * @returns {Promise<Game>}
-   * @throws {Error} - If the game is not found.
+   * @throws {Error} - If the ID format is invalid or game is not found.
    */
   async updateGame (id, data) {
+    this.#validateId(id)
     const game = await this.gameRepository.update(id, data)
     if (!game) {
       throw new Error('Game not found')
@@ -77,9 +91,10 @@ export class GameService {
    *
    * @param {string} id - The game's MongoDB ObjectId.
    * @returns {Promise<boolean>}
-   * @throws {Error} - If the game is not found.
+   * @throws {Error} - If the ID format is invalid or game is not found.
    */
   async deleteGame (id) {
+    this.#validateId(id)
     const game = await this.gameRepository.delete(id)
     if (!game) {
       throw new Error('Game not found')
