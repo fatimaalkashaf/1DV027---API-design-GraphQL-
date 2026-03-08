@@ -11,7 +11,7 @@ export const verifyToken = (req) => {
   try {
     const authHeader = req.headers.authorization
 
-    if (!authHeader || !authHeader.startsWith('Bearer')) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return null
     }
 
