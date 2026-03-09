@@ -1,0 +1,1304 @@
+{
+  "info": {
+    "_postman_id": "d3fdb80f-6d67-4f98-a66b-80506eb76fe1",
+    "name": "Videogame API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43144951"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register - Success",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const randomNum = Math.floor(Math.random() * 100000)\r",
+                  "pm.environment.set('username', `testuser_${randomNum}`)\r",
+                  "pm.environment.set('password', 'TestPassword123')"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response has data field', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('data')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Register returns token and user', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.register).to.have.property('token')\r",
+                  "    pm.expect(response.data.register.user).to.have.property('id')\r",
+                  "    pm.expect(response.data.register.user).to.have.property('username')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Content-Type is application/json', function () {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json')\r",
+                  "})\r",
+                  "\r",
+                  "const response = pm.response.json()\r",
+                  "if (response.data && response.data.register) {\r",
+                  "    pm.environment.set('token', response.data.register.token)\r",
+                  "    pm.environment.set('userId', response.data.register.user.id)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation Register($username: String!, $password: String!) { register(username: $username, password: $password) { token user { id username } } }\",\r\n    \"variables\": {\r\n        \"username\": \"{{username}}\",\r\n        \"password\": \"{{password}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates dublicate username', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('already exists')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation Register($username: String!, $password: String!) { register(username: $username, password: $password) { token user { id username } } }\",\r\n    \"variables\": {\r\n        \"username\": \"{{username}}\",\r\n        \"password\": \"{{password}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response has data field', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('data')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Login returns token and user', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.login).to.have.property('token')\r",
+                  "    pm.expect(response.data.login.user).to.have.property('id')\r",
+                  "    pm.expect(response.data.login.user).to.have.property('username')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Content-Type is application/json', function () {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json')\r",
+                  "})\r",
+                  "\r",
+                  "const response = pm.response.json()\r",
+                  "if (response.data && response.data.login) {\r",
+                  "    pm.environment.set('token', response.data.login.token)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation Login($username: String!, $password: String!) { login(username: $username, password: $password) { token user { id username } } }\",\r\n    \"variables\": {\r\n        \"username\": \"{{username}}\",\r\n        \"password\": \"{{password}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates invalid credentials', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Invalid credentials')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation Login($username: String!, $password: String!) { login(username: $username, password: $password) { token user { id username } } }\",\r\n    \"variables\": {\r\n        \"username\": \"{{username}}\",\r\n        \"password\": \"wrongPassword\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "item": [
+        {
+          "name": "Get Games - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response has data field', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('data')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Games list is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.games.games).to.be.an('array')\r",
+                  "    pm.expect(response.data.games.games.length).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Total count is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.games.totalCount).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game has required fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    const game = response.data.games.games[0]\r",
+                  "    pm.expect(game).to.have.property('id')\r",
+                  "    pm.expect(game).to.have.property('name')\r",
+                  "    pm.expect(game).to.have.property('platform')\r",
+                  "    pm.expect(game).to.have.property('genre')\r",
+                  "})\r",
+                  "\r",
+                  "const response = pm.response.json()\r",
+                  "if (response.data && response.data.games.games.length > 0) {\r",
+                  "    pm.environment.set('gameId', response.data.games.games[0].id)\r",
+                  "    pm.environment.set('publisherId', response.data.games.games[0].publisher.id)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query { games (limit: 10) { totalCount games { id name platform year genre publisher { id name } } } }\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Games - With Filter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Filtered games are returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.games.games).to.be.an('array')\r",
+                  "    pm.expect(response.data.games.games.length).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('All returned games have correct genre', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    response.data.games.games.forEach(game => {\r",
+                  "        pm.expect(game.genre).to.equal('Action')\r",
+                  "    })\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query { games (genre: \\\"Action\\\", limit: 5) { totalCount games {id name genre } } }\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Game by ID - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.game).to.not.be.null\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game has correct id', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.game.id).to.equal(pm.environment.get('gameId'))\r",
+                  "})\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Game has required fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    const game = response.data.game\r",
+                  "    pm.expect(game).to.have.property('id')\r",
+                  "    pm.expect(game).to.have.property('name')\r",
+                  "    pm.expect(game).to.have.property('platform')\r",
+                  "    pm.expect(game).to.have.property('genre')\r",
+                  "    pm.expect(game).to.have.property('publisher')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Nested publisher data is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.game.publisher).to.have.property('id')\r",
+                  "    pm.expect(response.data.game.publisher).to.have.property('name')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query GetGame($id: ID!) { game(id: $id) { id name platform year genre publisher { id name } } }\",\r\n    \"variables\": {\r\n        \"id\": \"{{gameId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Game by ID - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates game not found', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Game not found')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game is null for non-existent ID', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.game).to.be.null\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query GetGame($id: ID!) { game(id: $id) { id name platform year genre } }\",\r\n    \"variables\": {\r\n        \"id\": \"000000000000000000000000\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Game - Success",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const randomNum = Math.floor(Math.random() * 100000)\r",
+                  "const gameName = `Test Game ${randomNum}`\r",
+                  "pm.environment.set('gameName', gameName)\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game is created', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.createGame).to.not.be.null\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Created game has correct name', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.createGame.name).to.equal(pm.environment.get('gameName'))\r",
+                  "})\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Created game has required fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    const game = response.data.createGame\r",
+                  "    pm.expect(game).to.have.property('id')\r",
+                  "    pm.expect(game).to.have.property('name')\r",
+                  "    pm.expect(game).to.have.property('platform')\r",
+                  "    pm.expect(game).to.have.property('genre')\r",
+                  "    pm.expect(game).to.have.property('publisher')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Nested publisher data is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.createGame.publisher).to.have.property('id')\r",
+                  "    pm.expect(response.data.createGame.publisher).to.have.property('name')\r",
+                  "})\r",
+                  "\r",
+                  "const response = pm.response.json()\r",
+                  "if (response.data && response.data.createGame) {\r",
+                  "    pm.environment.set('createdGameId', response.data.createGame.id)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation CreateGame($name: String!, $platform: String!, $year: Int, $genre: String!, $publisherId: ID!) { createGame(name: $name, platform: $platform, year: $year, genre: $genre, publisherId: $publisherId) { id name platform year genre publisher { id name } } }\",\r\n    \"variables\": {\r\n        \"name\": \"{{gameName}}\",\r\n        \"platform\": \"PS5\",\r\n        \"year\": 2024,\r\n        \"genre\": \"Action\",\r\n        \"publisherId\": \"{{publisherId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Game - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates authentication required', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Authentication required')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game data is null', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data).to.be.null\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation CreateGame($name: String!, $platform: String!, $year: Int, $genre: String!, $publisherId: ID!) { createGame(name: $name, platform: $platform, year: $year, genre: $genre, publisherId: $publisherId) { id name platform year genre publisher { id name } } }\",\r\n    \"variables\": {\r\n        \"name\": \"Unauthorized Game\",\r\n        \"platform\": \"PS5\",\r\n        \"year\": 2024,\r\n        \"genre\": \"Action\",\r\n        \"publisherId\": \"{{publisherId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Game - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game is updated', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.updateGame).to.not.be.null\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game has updated name', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.updateGame.name).to.equal('Updated Test Game')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game has updated platform', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.updateGame.platform).to.equal('Xbox')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game has updated genre', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.updateGame.genre).to.equal('Adventure')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation updateGame($id: ID!, $name: String!, $platform: String!, $year: Int, $genre: String!) { updateGame(id: $id, name: $name, platform: $platform, year: $year, genre: $genre) { id name platform year genre } }\",\r\n    \"variables\": {\r\n        \"id\": \"{{createdGameId}}\",\r\n        \"name\": \"Updated Test Game\",\r\n        \"platform\": \"Xbox\",\r\n        \"year\": 2024,\r\n        \"genre\": \"Adventure\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Game - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates authentication required', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Authentication required')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game data is null', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data).to.be.null\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation updateGame($id: ID!, $name: String!) { updateGame(id: $id, name: $name) { id name } }\",\r\n    \"variables\": {\r\n        \"id\": \"{{createdGameId}}\",\r\n        \"name\": \"Should not Update\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Game - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game is deleted', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.deleteGame).to.be.true\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('No errors in response', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.not.have.property('errors')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation DeleteGame($id: ID!) { deleteGame(id: $id) }\",\r\n    \"variables\": {\r\n        \"id\": \"{{createdGameId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Game - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates authentication required', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Authentication required')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Game data is null', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data).to.be.null\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"mutation DeleteGame($id: ID!) { deleteGame(id: $id) }\",\r\n    \"variables\": {\r\n        \"id\": \"{{createdGameId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Publishers",
+      "item": [
+        {
+          "name": "Get Publishers - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Publishers list is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.publishers.publishers).to.be.an('array')\r",
+                  "    pm.expect(response.data.publishers.publishers.length).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Total count is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.publishers.totalCount).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Publisher has required fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    const publisher = response.data.publishers.publishers[0]\r",
+                  "    pm.expect(publisher).to.have.property('id')\r",
+                  "    pm.expect(publisher).to.have.property('name')\r",
+                  "    pm.expect(publisher).to.have.property('totalGames')\r",
+                  "    pm.expect(publisher).to.have.property('totalGlobalSales')\r",
+                  "})\r",
+                  "\r",
+                  "const response = pm.response.json()\r",
+                  "if (response.data && response.data.publishers.publishers.length > 0) {\r",
+                  "    pm.environment.set('publisherId', response.data.publishers.publishers[0].id)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query { publishers(limit: 10) { publishers { id name totalGames totalGlobalSales } totalCount } }\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Publisher by ID - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Publisher is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.publisher).to.not.be.null\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Publisher has correct id', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.publisher.id).to.equal(pm.environment.get('publisherId'))\r",
+                  "})\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Publisher has required fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    const publisher = response.data.publisher\r",
+                  "    pm.expect(publisher).to.have.property('id')\r",
+                  "    pm.expect(publisher).to.have.property('name')\r",
+                  "    pm.expect(publisher).to.have.property('totalGames')\r",
+                  "    pm.expect(publisher).to.have.property('totalGlobalSales')\r",
+                  "})\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query GetPublisher($id: ID!) { publisher(id: $id) {id name totalGames totalGlobalSales } }\",\r\n    \"variables\": {\r\n        \"id\": \"{{publisherId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Publisher by ID - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates publisher not found', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Publisher not found')\r",
+                  "})\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query GetPublisher($id: ID!) { publisher(id: $id) {id name totalGames totalGlobalSales } }\",\r\n    \"variables\": {\r\n        \"id\": \"000000000000000000000000\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Platforms",
+      "item": [
+        {
+          "name": "Get Platforms - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Platform list is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.platforms.platforms).to.be.an('array')\r",
+                  "    pm.expect(response.data.platforms.platforms.length).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Total count is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.platforms.totalCount).to.be.greaterThan(0)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Platform has required fields', function() {\r",
+                  "    const response = pm.response.json()\r",
+                  "    const platform = response.data.platforms.platforms[0]\r",
+                  "    pm.expect(platform).to.have.property('id')\r",
+                  "    pm.expect(platform).to.have.property('name')\r",
+                  "    pm.expect(platform).to.have.property('totalGames')\r",
+                  "    pm.expect(platform).to.have.property('genres')\r",
+                  "    pm.expect(platform).to.have.property('releaseYears')\r",
+                  "})\r",
+                  "\r",
+                  "const response = pm.response.json()\r",
+                  "if (response.data && response.data.platforms.platforms.length > 0) {\r",
+                  "    pm.environment.set('platformId', response.data.platforms.platforms[0].id)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query { platforms { platforms { id name totalGames genres releaseYears } totalCount } }\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Platform by ID - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Platform is returned', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.platform).to.not.be.null\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Platform has correct id', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.platform.id).to.equal(pm.environment.get('platformId'))\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Platform genres is an array', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.platform.genres).to.be.an('array')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Platform releaseYears is and array', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.data.platform.releaseYears).to.be.an('array')\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query GetPlatforms($id: ID!) { platform(id: $id) {id name totalGames genres releaseYears } }\",\r\n    \"variables\": {\r\n        \"id\": \"{{platformId}}\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Platform by ID - Failure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Response contains error fields', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response).to.have.property('errors')\r",
+                  "})\r",
+                  "\r",
+                  "pm.test('Error message indicates platform not found', function () {\r",
+                  "    const response = pm.response.json()\r",
+                  "    pm.expect(response.errors[0].message).to.include('Platform not found')\r",
+                  "})\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"query GetPlatform($id: ID!) { platform(id: $id) {id name totalGames genres releaseYears } }\",\r\n    \"variables\": {\r\n        \"id\": \"000000000000000000000000\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

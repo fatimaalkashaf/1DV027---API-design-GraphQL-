@@ -4,15 +4,26 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - NODE:ENV=development
+      - NODE_ENV=development
       - MONGODB_URI=mongodb://mongodb:27017/videogame-api
       - JWT_SECRET=${JWT_SECRET}
       - PORT=4000
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     volumes:
       - .:/app
       - /app/node_modules
+  
+  seed:
+    build: .
+    command: node seed/seedDatabase.js
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/videogame-api
+    depends_on:
+      mongodb:
+        condition: service_healthy
 
   mongodb:
     image: mongo:7
@@ -20,6 +31,11 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
       
 volumes:
   mongodb_data:
