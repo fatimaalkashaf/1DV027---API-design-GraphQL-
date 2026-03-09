@@ -1,4 +1,3 @@
-import { platform } from 'node:os';
 import { Platform } from '../models/Platform.js';
 
 /**
@@ -36,7 +35,7 @@ export class PlatformRepository {
    * @returns {Promise<number>}
    */
   async count () {
-    return platform.countDocuments()
+    return Platform.countDocuments()
   }
 
   /**
