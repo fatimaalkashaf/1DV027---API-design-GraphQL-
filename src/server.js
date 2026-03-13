@@ -19,6 +19,7 @@ const startServer = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    introspection: true,
     /**
      * Builds the GraphQL context for each request.
      * Attaches the authenticated user to the context if a valid JWT is provided.
