@@ -26,7 +26,7 @@ GraphQL
 
 **Examiner can verify tests in one of the following ways:**
 
-1. **CI/CD pipeline** — check the pipeline output in GitHub for test results.
+1. **CI/CD pipeline** — check the pipeline output in the GitHub repository for test results.
 2. **Run manually** — no setup needed:
    ```
    npx newman run postman/videogame-api.postman_collection.json -e postman/production.postman_environment.json
@@ -49,7 +49,7 @@ GraphQL
 
 ### Authentication
 
-A JSON Web Token (JWT) is used for authentication. The users can register and log in through the GraphQL mutations (register, login) and will then receive a signed token that expires after 90 days and must be included as a Bearer token in the Authorization header for the createGame, updateGame and deleteGame operations. The alternative would have been a session-based authentication, but JWT is better because it is stateless and better suited for APIs since it does not require a server-side session storage. The trade-off with a JWT token is that the tokens cannot be invalidated before they expire.
+A JSON Web Token (JWT) is used for authentication. The users can register and log in through the different GraphQL mutations (register, login) and will then receive a signed token that expires after 90 days and must be included as a Bearer token in the Authorization header for the createGame, updateGame and deleteGame operations. The alternative solution would have been a session-based authentication, but JWT is better because it is stateless and better suited for APIs since it does not require a server-side session storage. The trade-off with a JWT token is that the tokens cannot be invalidated before they expire.
 
 ### API Design
 
