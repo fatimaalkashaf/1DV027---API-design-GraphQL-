@@ -203,6 +203,6 @@ See [all requirements in Issues](../../issues/). Close issues as you implement t
 | Seed script for sample data | [#5](../../issues/5) | :✅: |
 | Code quality (consistent standard, modular, documented) | [#10](../../issues/10) | :✅: |
 | Deployed and publicly accessible | [#9](../../issues/9) | :✅: |
-| Peer review reflection submitted on merge request | [#11](../../issues/11) | :white_large_square: |
+| Peer review reflection submitted on merge request | [#11](../../issues/11) | :✅: |
 
 
