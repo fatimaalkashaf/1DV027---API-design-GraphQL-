@@ -5,6 +5,7 @@ import { typeDefs } from './graphql/schema.js'
 import { resolvers } from './graphql/resolvers/index.js'
 import { connectDatabase } from './config/database.js'
 import { verifyToken } from './middleware/auth.js'
+import cors from 'cors'
 
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config()
@@ -15,6 +16,9 @@ if (process.env.NODE_ENV !== 'production') {
  */
 const startServer = async () => {
   const app = express()
+  app.use(cors({
+    origin: '*'
+  }))
 
   const server = new ApolloServer({
     typeDefs,
